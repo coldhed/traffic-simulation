@@ -5,12 +5,15 @@ class CarAgent(Agent):
     Agent that represents a car that moves around the grid.
     
     """
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, destination):
         """
         Creates a new car agent.
         Args:
         """
         super().__init__(unique_id, model)
+        self.destination = destination
+
+        
 
     def step(self):
         pass

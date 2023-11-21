@@ -1,4 +1,5 @@
 import os
+import random
 from mesa import Model, agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
@@ -28,7 +29,7 @@ class TrafficModel(Model):
         self.populateGrid()
         
         self.carCount = 0
-        car = CarAgent(f"car{self.carCount}", self)
+        car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
         self.grid.place_agent(car, (0, 0))
         self.schedule.add(car)
         
