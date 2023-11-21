@@ -1,3 +1,4 @@
+from queue import PriorityQueue
 from mesa import Agent
 
 class CarAgent(Agent):
@@ -13,10 +14,21 @@ class CarAgent(Agent):
         super().__init__(unique_id, model)
         self.destination = destination
 
-        
-
     def step(self):
         pass
+
+    def generatePath(self):
+        """
+        Generates a path from the current location to the destination using A*.
+        """
+        
+        pq = PriorityQueue()
+        pq.put((0, self.pos))
+        
+        # while pq.qsize() > 0:
+            
+        
+        
 
 class ObstacleAgent(Agent):
     """
