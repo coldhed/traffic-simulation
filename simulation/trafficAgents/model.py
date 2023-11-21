@@ -1,7 +1,8 @@
 import os
+import random
 from mesa import Model, agent
 from mesa.time import RandomActivation
-from mesa.space import SingleGrid
+from mesa.space import MultiGrid
 from .agent import CarAgent, ObstacleAgent, StoplightAgent, StreetAgent, TargetAgent
 
 class TrafficModel(Model):
@@ -16,14 +17,21 @@ class TrafficModel(Model):
         # RandomActivation is a scheduler that activates each agent once per step, in random order.
         self.schedule = RandomActivation(self)
         
-        self.running = True 
+        self.running = True
+        
+        self.destinations = []
 
         self.readMap("maps/2022.txt")
         
         # Multigrid is a special type of grid where each cell can contain multiple agents.
-        self.grid = SingleGrid(len(self.map[0]), len(self.map), torus = False) 
+        self.grid = MultiGrid(len(self.map[0]), len(self.map), torus = False) 
         
         self.populateGrid()
+        
+        self.carCount = 0
+        car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
+        self.grid.place_agent(car, (0, 0))
+        self.schedule.add(car)
         
     def readMap(self, filename):
         """
@@ -42,13 +50,16 @@ class TrafficModel(Model):
         for h in range(self.grid.height):
             for w in range(self.grid.width):
                 if (self.map[h][w] == '#'):
-                    agent = ObstacleAgent(f"{h}{w}", self)
+                    agent = ObstacleAgent(f"{h}_{w}", self)
                 elif (self.map[h][w] == 'S'):
-                    agent = StoplightAgent(f"{h}{w}", self, "horizontal")
+                    agent = StoplightAgent(f"{h}_{w}", self, "horizontal")
+                    self.schedule.add(agent)
                 elif (self.map[h][w] == 's'):
-                    agent = StoplightAgent(f"{h}{w}", self, "vertical")
+                    agent = StoplightAgent(f"{h}_{w}", self, "vertical")
+                    self.schedule.add(agent)
                 elif (self.map[h][w] == 'D'):
-                    agent = TargetAgent(f"{h}{w}", self)
+                    agent = TargetAgent(f"{h}_{w}", self)
+                    self.destinations.append((w, h))
                 else:
                     # agent is a street, find it's directions
                     d = self.map[h][w]
@@ -73,7 +84,7 @@ class TrafficModel(Model):
                         # shouldn't get here but just in case
                         directions = ["up", "down", "left", "right"]
                         
-                    agent = StreetAgent(f"{h}{w}", self, directions)
+                    agent = StreetAgent(f"{h}_{w}", self, directions)
                 
                 self.grid.place_agent(agent, (w, h))
 

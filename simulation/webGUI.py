@@ -38,6 +38,12 @@ def agent_portrayal(agent):
         portrayal["Color"] = "blue"
         portrayal["Layer"] = 0
 
+    elif (isinstance(agent, CarAgent)):
+        portrayal["Shape"] = "circle"
+        portrayal["r"] = 0.7,
+        portrayal["Color"] = "#99c0ff"
+        portrayal["Layer"] = 2
+
     return portrayal
 
 W = 24
@@ -46,7 +52,7 @@ H = 25
 model_params = {
 }
 
-grid = CanvasGrid(agent_portrayal, W, H, 500, 500)
+grid = CanvasGrid(agent_portrayal, W, H, W*20, H*20)
 
 # bar_chart = BarChartModule(
 #     [{"Label":"Steps", "Color":"#AA0000"}], 
