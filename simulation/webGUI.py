@@ -46,7 +46,7 @@ H = 25
 model_params = {
 }
 
-grid = CanvasGrid(agent_portrayal, W, H, 500, 500)
+grid = CanvasGrid(agent_portrayal, W, H, W*20, H*20)
 
 # bar_chart = BarChartModule(
 #     [{"Label":"Steps", "Color":"#AA0000"}], 

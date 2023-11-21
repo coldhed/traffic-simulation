@@ -45,8 +45,10 @@ class TrafficModel(Model):
                     agent = ObstacleAgent(f"{h}{w}", self)
                 elif (self.map[h][w] == 'S'):
                     agent = StoplightAgent(f"{h}{w}", self, "horizontal")
+                    self.schedule.add(agent)
                 elif (self.map[h][w] == 's'):
                     agent = StoplightAgent(f"{h}{w}", self, "vertical")
+                    self.schedule.add(agent)
                 elif (self.map[h][w] == 'D'):
                     agent = TargetAgent(f"{h}{w}", self)
                 else:
