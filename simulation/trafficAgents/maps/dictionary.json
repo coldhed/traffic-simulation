@@ -10,5 +10,6 @@
     "c": "down-right",
     "#": "obstacle",
     "S": "horizontal-stoplight",
-    "s": "vertical-stoplight"
+    "s": "vertical-stoplight",
+    "D": "destination"
 }
