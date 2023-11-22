@@ -22,7 +22,7 @@ AssetImportWorker0
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-53720
+53844
 Successfully changed project path to: /Users/marielgomez/Desktop/traffic-simulation/visualization/TrafficVisualization
 /Users/marielgomez/Desktop/traffic-simulation/visualization/TrafficVisualization
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -56,12 +56,12 @@ Successfully changed project path to: /Users/marielgomez/Desktop/traffic-simulat
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [7962500800] Host "[IP] 10.49.66.219 [Port] 0 [Flags] 2 [Guid] 1993127743 [EditorId] 1993127743 [Version] 1048832 [Id] OSXEditor(0,MacBook-Air-140.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+Player connection [7962500800] Host "[IP] 10.49.66.219 [Port] 0 [Flags] 2 [Guid] 4163560744 [EditorId] 4163560744 [Version] 1048832 [Id] OSXEditor(0,MacBook-Air-140.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
 
-Player connection [7962500800] Host "[IP] 10.49.66.219 [Port] 0 [Flags] 2 [Guid] 1993127743 [EditorId] 1993127743 [Version] 1048832 [Id] OSXEditor(0,MacBook-Air-140.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [7962500800] Host "[IP] 10.49.66.219 [Port] 0 [Flags] 2 [Guid] 4163560744 [EditorId] 4163560744 [Version] 1048832 [Id] OSXEditor(0,MacBook-Air-140.local) [Debug] 1 [PackageName] OSXEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
 
 [Physics::Module] Initialized MultithreadedJobDispatcher with 7 workers.
-Refreshing native plugins compatible for Editor in 5.54 ms, found 2 plugins.
+Refreshing native plugins compatible for Editor in 12.23 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2022.3.12f1 (4fe6e059c7ef)
 [Subsystems] Discovering subsystems at path /Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/Resources/UnitySubsystems
@@ -76,44 +76,44 @@ Initialize mono
 Mono path[0] = '/Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/Managed'
 Mono path[1] = '/Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityjit-macos'
 Mono config path = '/Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56301
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56586
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: /Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll
-Registered in 0.001023 seconds.
-- Loaded All Assemblies, in  0.223 seconds
+Registered in 0.002342 seconds.
+- Loaded All Assemblies, in  0.253 seconds
 Native extension for OSXStandalone target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.139 seconds
-Domain Reload Profiling: 362ms
-	BeginReloadAssembly (79ms)
+- Finished resetting the current domain, in  0.142 seconds
+Domain Reload Profiling: 395ms
+	BeginReloadAssembly (91ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (0ms)
-	RebuildCommonClasses (21ms)
-	RebuildNativeTypeToScriptingClass (7ms)
-	initialDomainReloadingComplete (29ms)
-	LoadAllAssembliesAndSetupDomain (86ms)
-		LoadAssemblies (80ms)
+		CreateAndSetChildDomain (1ms)
+	RebuildCommonClasses (24ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (32ms)
+	LoadAllAssembliesAndSetupDomain (97ms)
+		LoadAssemblies (92ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (84ms)
-			TypeCache.Refresh (83ms)
-				TypeCache.ScanAssembly (74ms)
+		AnalyzeDomain (94ms)
+			TypeCache.Refresh (93ms)
+				TypeCache.ScanAssembly (84ms)
 			ScanForSourceGeneratedMonoScriptInfo (0ms)
 			ResolveRequiredComponents (0ms)
-	FinalizeReload (139ms)
+	FinalizeReload (143ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (103ms)
+		SetupLoadedEditorAssemblies (106ms)
 			LogAssemblyErrors (0ms)
 			InitializePlatformSupportModulesInManaged (4ms)
 			SetLoadedEditorAssemblies (4ms)
 			RefreshPlugins (0ms)
 			BeforeProcessingInitializeOnLoad (1ms)
-			ProcessInitializeOnLoadAttributes (70ms)
-			ProcessInitializeOnLoadMethodAttributes (24ms)
+			ProcessInitializeOnLoadAttributes (71ms)
+			ProcessInitializeOnLoadMethodAttributes (25ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -121,86 +121,57 @@ Domain Reload Profiling: 362ms
 ========================================================================
 Worker process is ready to serve import requests
 Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in  0.407 seconds
-Refreshing native plugins compatible for Editor in 0.58 ms, found 2 plugins.
+- Loaded All Assemblies, in  0.396 seconds
+Refreshing native plugins compatible for Editor in 0.74 ms, found 2 plugins.
 Native extension for OSXStandalone target not found
 Package Manager log level set to [2]
 [Package Manager] Server::EnsureServerProcessIsRunning -- launch failed, reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.331 seconds
-Domain Reload Profiling: 739ms
-	BeginReloadAssembly (74ms)
+- Finished resetting the current domain, in  0.306 seconds
+Domain Reload Profiling: 703ms
+	BeginReloadAssembly (72ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (3ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (16ms)
 	RebuildCommonClasses (21ms)
-	RebuildNativeTypeToScriptingClass (7ms)
-	initialDomainReloadingComplete (19ms)
-	LoadAllAssembliesAndSetupDomain (287ms)
-		LoadAssemblies (190ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (20ms)
+	LoadAllAssembliesAndSetupDomain (275ms)
+		LoadAssemblies (184ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (130ms)
-			TypeCache.Refresh (120ms)
-				TypeCache.ScanAssembly (95ms)
-			ScanForSourceGeneratedMonoScriptInfo (6ms)
+		AnalyzeDomain (123ms)
+			TypeCache.Refresh (114ms)
+				TypeCache.ScanAssembly (93ms)
+			ScanForSourceGeneratedMonoScriptInfo (7ms)
 			ResolveRequiredComponents (2ms)
-	FinalizeReload (331ms)
+	FinalizeReload (306ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (240ms)
+		SetupLoadedEditorAssemblies (220ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			SetLoadedEditorAssemblies (4ms)
+			InitializePlatformSupportModulesInManaged (2ms)
+			SetLoadedEditorAssemblies (2ms)
 			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (34ms)
-			ProcessInitializeOnLoadAttributes (190ms)
+			BeforeProcessingInitializeOnLoad (28ms)
+			ProcessInitializeOnLoadAttributes (177ms)
 			ProcessInitializeOnLoadMethodAttributes (10ms)
 			AfterProcessingInitializeOnLoad (1ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
 		AwakeInstancesAfterBackupRestoration (2ms)
 Launching external process: /Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/Tools/UnityShaderCompiler
-Launched and connected shader compiler UnityShaderCompiler after 0.05 seconds
-Refreshing native plugins compatible for Editor in 0.55 ms, found 2 plugins.
+Launched and connected shader compiler UnityShaderCompiler after 0.21 seconds
+Refreshing native plugins compatible for Editor in 0.96 ms, found 2 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 3082 Unused Serialized files (Serialized files now loaded: 0)
 Unloading 32 unused Assets / (51.1 KB). Loaded Objects now: 3543.
-Memory consumption went from 125.5 MB to 125.4 MB.
-Total: 2.387916 ms (FindLiveObjects: 0.094709 ms CreateObjectMapping: 0.050625 ms MarkObjects: 2.156958 ms  DeleteObjects: 0.084875 ms)
+Memory consumption went from 125.7 MB to 125.6 MB.
+Total: 2.356167 ms (FindLiveObjects: 0.118750 ms CreateObjectMapping: 0.048625 ms MarkObjects: 2.126084 ms  DeleteObjects: 0.062000 ms)
 
-AssetImportParameters requested are different than current active one (requested -> active):
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:AudioImporter_EditorPlatform: 3918e3fc78b5a79bad01e8451be0beb8 -> 
-  custom:framework-osx-AVFoundation: e770b220cccbd017edd2c1fefb359320 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-========================================================================
-Received Import Request.
-  Time since last request: 45035.730008 seconds.
-  path: Assets/Models/Wheel1.obj
-  artifactKey: Guid(56117a47fa69a4c40b6ae5dace630a41) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Models/Wheel1.obj using Guid(56117a47fa69a4c40b6ae5dace630a41) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '966d7c4f03ae404caa1f71d65baa3538') in 0.085120 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 11
-========================================================================
-Received Prepare
-Refreshing native plugins compatible for Editor in 0.66 ms, found 2 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 1 unused Assets / (0.8 KB). Loaded Objects now: 3588.
-Memory consumption went from 79.8 MB to 79.8 MB.
-Total: 10.375750 ms (FindLiveObjects: 0.145417 ms CreateObjectMapping: 0.052708 ms MarkObjects: 10.124292 ms  DeleteObjects: 0.052959 ms)
-
-Prepare: number of updated asset objects reloaded= 0
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
   custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
@@ -216,25 +187,81 @@ AssetImportParameters requested are different than current active one (requested
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
 ========================================================================
 Received Import Request.
-  Time since last request: 106.785999 seconds.
-  path: Assets/Materials/Material.002.mat
-  artifactKey: Guid(dd24e012b23c2400d9ef6ec440d4e332) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Materials/Material.002.mat using Guid(dd24e012b23c2400d9ef6ec440d4e332) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6152121fedc8761f0bd261d52e96b360') in 0.032131 seconds
-Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 1
-========================================================================
-Received Import Request.
-  Time since last request: 108.577336 seconds.
+  Time since last request: 46279.820920 seconds.
   path: Assets/Models/Wheel.obj
   artifactKey: Guid(b794c4c87af134d7e86198cd9341201f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Models/Wheel.obj using Guid(b794c4c87af134d7e86198cd9341201f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3d9b84fb34b8cfb0ec835090404a17ea') in 0.024063 seconds
+Start importing Assets/Models/Wheel.obj using Guid(b794c4c87af134d7e86198cd9341201f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2810041f6752128aeeefa1244cf7dd57') in 0.075500 seconds
 Number of updated asset objects reloaded before import = 0
 Number of asset objects unloaded after import = 11
 ========================================================================
 Received Import Request.
-  Time since last request: 3.085555 seconds.
-  path: Assets/Materials/Material.005.mat
-  artifactKey: Guid(2a8349376a2594b848a4faa8789b9d10) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Materials/Material.005.mat using Guid(2a8349376a2594b848a4faa8789b9d10) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3e61c755da01ee05c0cf73ca93614798') in 0.015937 seconds
+  Time since last request: 332.205534 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7d947fedfd5720146100e867b1f9c4f7') in 0.095923 seconds
 Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 1
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 187.052351 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3a0acc8d0c97da635a1e666292aa4561') in 0.071097 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 111.961564 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4538e2027456e53e78b092c41dc3a23d') in 0.079758 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 27.197741 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '3dcf71a891a1b282cbdf691989ef692f') in 0.078312 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 33.149473 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '63ae430c89ac1d4b06a9c1721486614c') in 0.058120 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 30.532306 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b13510b5fca30149b4cf87d7cbf35587') in 0.068855 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 721.661835 seconds.
+  path: Assets/Models/Street.obj
+  artifactKey: Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/Street.obj using Guid(9990b482334f84d50b9ce2a785cfc52c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd808c2839b0961e49f7d4b858b38713c') in 0.074187 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 30
+========================================================================
+Received Import Request.
+  Time since last request: 1271.146806 seconds.
+  path: Assets/Models/StreetWalk.obj
+  artifactKey: Guid(cdeaa0dfbc5224e33a0f54264e1f8dcb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/StreetWalk.obj using Guid(cdeaa0dfbc5224e33a0f54264e1f8dcb) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b0c21e7a7535574b2ec3f62ccd0a8746') in 0.094322 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 35
+========================================================================
+Received Import Request.
+  Time since last request: 1696.162051 seconds.
+  path: Assets/Models/StreetEmpty.obj
+  artifactKey: Guid(fb4b2ddccc90644cc9285710261a64c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Models/StreetEmpty.obj using Guid(fb4b2ddccc90644cc9285710261a64c5) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '55e26a3e3266e8de554de15bd9db309e') in 0.050580 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 10
