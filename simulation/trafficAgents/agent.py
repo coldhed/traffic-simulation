@@ -20,6 +20,12 @@ class CarAgent(Agent):
         
 
     def step(self):
+        # if we are in our destination, then we are done
+        if self.pos == self.destination:
+            self.model.schedule.remove(self)
+            self.model.grid.remove_agent(self)
+            return
+        
         # if we are in a node
         if self.pos in self.model.cellToNode:
             # currNode stores the current Node we are in (not the cell)
@@ -65,7 +71,7 @@ class CarAgent(Agent):
                 while node != self.currNode:
                     self.path.appendleft((cameFrom[node][0], cameFrom[node][1]))
                     node = cameFrom[node][0]
-                
+
                 return 
             
             # if it has no edges, and it's not the target, then it's a dead end
@@ -114,41 +120,40 @@ class CarAgent(Agent):
         """
         Moves the car when it's outside a node.
         """
-        direction = None
+        # get the direction of the street we are in
+        streetDirection = None
         for agent in self.model.grid[self.pos[0]][self.pos[1]]:
             if isinstance(agent, StreetAgent):
-                direction = agent.directions[0]
+                streetDirection = agent.directions[0]
         
-        if direction == None:
-            direction = self.lastDirection
+        if streetDirection == None:
+            streetDirection = self.lastDirection
         
-        lanes = ["up", "down"] if direction == "left" or direction == "right" else ["left", "right"]
+        lanes = ["up", "down"] if streetDirection == "left" or streetDirection == "right" else ["left", "right"]
         
-        currentLane = self.getCurrentLane(direction)
+        # lane we are in
+        currentLane = self.getCurrentLane(streetDirection)
         
+        # lane we are not in
         otherLane = lanes[0] if currentLane == lanes[1] else lanes[1]
         
-        # print("current lane: " + str(currentLane))
+        # an obligatory lane exists if we are making a turn next node
+        obligatoryLane = self.getObligatoryLane(streetDirection)
         
-        preferredLane = self.getPreferredLane(direction)
-        
-        # print("preferred lane: " + str(preferredLane))
-        # print("direction: " + str(direction))
-        
-        if preferredLane == None:
+        if obligatoryLane == None:
             # if there is a preferred lane, try to move there
-            if not self.moveToDirection(direction):
+            if not self.moveToDirection(streetDirection):
                 # if we didn't move, try to move to the other lane
-                self.moveLane(direction, otherLane)
+                self.moveLane(streetDirection, otherLane)
                 
-        elif currentLane == preferredLane:
-            self.moveToDirection(direction)
+        elif currentLane == obligatoryLane:
+            self.moveToDirection(streetDirection)
             
         else:
-            if not self.moveLane(direction, preferredLane):
-                self.moveToDirection(direction)
+            if not self.moveLane(streetDirection, obligatoryLane):
+                self.moveToDirection(streetDirection)
                 
-        self.lastDirection = direction
+        self.lastDirection = streetDirection
             
     
     def moveLane(self, direction, lane):
@@ -177,10 +182,7 @@ class CarAgent(Agent):
             mod_x += 1
             
         targetCell = (self.pos[0] + mod_x, self.pos[1] + mod_y)
-        print("pos: " + str(self.pos))
-        print("direction: " + str(direction))
-        print("lane: " + str(lane))
-        print("target cell: " + str(targetCell))
+
         if not self.isCarInCell(targetCell):
             self.model.grid.move_agent(self, targetCell)
             return True
@@ -213,18 +215,16 @@ class CarAgent(Agent):
         """
         return any (isinstance(agent, CarAgent) for agent in self.model.grid[cell[0]][cell[1]])
     
-    def getPreferredLane(self, direction):
+    def getObligatoryLane(self, streetDirection):
         """
         Returns the preferred lane of the car, based on the direction it's going and the next step in the path
         """
-        # get the car agent in the cell we are in
-        for agent in self.model.grid[self.pos[0]][self.pos[1]]:
-            if isinstance(agent, StreetAgent):
-                # if the next turn is going straight ahead, there is no preferred lane
-                if agent.directions[0] == direction: 
-                    return None
-                else:
-                    return direction
+        turnDirection = self.path[0][1]
+        
+        if streetDirection == turnDirection:
+            return None
+        else:
+            return turnDirection
                 
     def getCurrentLane(self, direction):
         """
