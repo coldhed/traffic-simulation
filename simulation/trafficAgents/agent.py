@@ -141,10 +141,16 @@ class CarAgent(Agent):
         obligatoryLane = self.getObligatoryLane(streetDirection)
         
         if obligatoryLane == None:
-            # if there is a preferred lane, try to move there
-            if not self.moveToDirection(streetDirection):
-                # if we didn't move, try to move to the other lane
-                self.moveLane(streetDirection, otherLane)
+            bestLane = self.getBestLane(streetDirection)
+            
+            # try to move to the best lane
+            if bestLane == currentLane:
+                if not self.moveToDirection(streetDirection):
+                    # if we didn't move, try to move to the other lane
+                    self.moveLane(streetDirection, otherLane)
+            else:
+                if not self.moveLane(streetDirection, bestLane):
+                    self.moveToDirection(streetDirection)
                 
         elif currentLane == obligatoryLane:
             self.moveToDirection(streetDirection)
@@ -225,6 +231,18 @@ class CarAgent(Agent):
             return None
         else:
             return turnDirection
+        
+    def getBestLane(self, streetDirection):
+        """
+        Although the car doesn't need to make a turn next node, it will eventually have to,
+        so we return what that lane will be.
+        """
+        for turn in self.path:
+            if turn[1] != streetDirection:
+                return turn[1]
+            
+        # we always need to make a turn to reach the destination, so this shouldn't happen
+        return None
                 
     def getCurrentLane(self, direction):
         """
