@@ -29,13 +29,13 @@ class TrafficModel(Model):
         self.grid = MultiGrid(len(self.map[0]), len(self.map), torus = False) 
         
         self.populateGrid()
+        self.readGraph("maps/2022_Graph.json")
         
         self.carCount = 0
         car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
         self.grid.place_agent(car, (0, 0))
         self.schedule.add(car)
         
-        self.readGraph("maps/2022_Graph.json")
         
     def readMap(self, filename):
         """
@@ -104,16 +104,20 @@ class TrafficModel(Model):
         with open(os.path.join(os.path.dirname(__file__), filename), 'r') as f:
             self.graph = json.load(f)
 
-            # create a dictionary mapping cells to nodes
-            self.cell_to_node = {}
-            # create a dictionary mapping nodes to directions
-            self.node_to_directions = {}
+            # dictionary mapping nodes to cells
+            self.nodeToCells = {}
+            # dictionary mapping cells to nodes
+            self.cellToNode = {}
+            # dictionary mapping nodes to directions
+            self.nodeToDirections = {}
             
             for node in self.graph["nodes"]:
-                self.node_to_directions[node["id"]] = node["directions"]
+                self.nodeToDirections[node["id"]] = node["directions"]
+                
+                self.nodeToCells[node["id"]] = [(cell["x"], cell["y"]) for cell in node["cells"]]
             
                 for cell in node["cells"]:
-                    self.cell_to_node[(cell["x"], cell["y"])] = node["id"]
+                    self.cellToNode[(cell["x"], cell["y"])] = node["id"]
             
             # create an adjacency list | + 1 because the nodes are 1-indexed
             self.adList = {}
