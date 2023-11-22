@@ -1,5 +1,7 @@
 import os
 import random
+import json
+
 from mesa import Model, agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
@@ -32,6 +34,8 @@ class TrafficModel(Model):
         car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
         self.grid.place_agent(car, (0, 0))
         self.schedule.add(car)
+        
+        self.readGraph("maps/2022_Graph.json")
         
     def readMap(self, filename):
         """
@@ -87,6 +91,42 @@ class TrafficModel(Model):
                     agent = StreetAgent(f"{h}_{w}", self, directions)
                 
                 self.grid.place_agent(agent, (w, h))
+
+    def readGraph(self, filename):
+        """
+        Given a filename, read the graph
+        Since the json is done manually, do this to check if it's correct:
+            verify number of nodes
+            verify number of cells in total that are nodes
+            verify number of nodes with edges
+            verify that for all nodes, the number of directions is the same as the number of edges
+        """
+        with open(os.path.join(os.path.dirname(__file__), filename), 'r') as f:
+            self.graph = json.load(f)
+
+            # create a dictionary mapping cells to nodes
+            self.cell_to_node = {}
+            # create a dictionary mapping nodes to directions
+            self.node_to_directions = {}
+            
+            for node in self.graph["nodes"]:
+                self.node_to_directions[node["id"]] = node["directions"]
+            
+                for cell in node["cells"]:
+                    self.cell_to_node[(cell["x"], cell["y"])] = node["id"]
+            
+            # create an adjacency list | + 1 because the nodes are 1-indexed
+            self.adList = {}
+            
+            for edge in self.graph["edges"]:
+                source = edge["from"]
+                edge.pop("from")
+                
+                if source in self.adList:
+                    self.adList[source].append(edge)
+                else:
+                    self.adList[source] = [edge]
+                
 
     def step(self):
         '''Advance the model by one step.'''
