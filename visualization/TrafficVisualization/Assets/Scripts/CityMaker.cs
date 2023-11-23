@@ -9,6 +9,7 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject roadPrefab;
     [SerializeField] GameObject crossRoadPrefab;
     [SerializeField] GameObject empRoadPrefab;
+    [SerializeField] GameObject empBorderRoadPrefab;
     [SerializeField] GameObject destPrefab;
     [SerializeField] GameObject[] buildingPrefab;
     [SerializeField] GameObject semaphorePrefab;
@@ -43,6 +44,26 @@ public class CityMaker : MonoBehaviour
             if (tiles[i] == 'i') {
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(empRoadPrefab, position, Quaternion.identity);
+                tile.transform.parent = transform;
+                x += 1;
+            } else if (tiles[i] == 'I') {
+                position = new Vector3(x * tileSize, 0, y * tileSize);
+                tile = Instantiate(empBorderRoadPrefab, position, Quaternion.identity);
+                tile.transform.parent = transform;
+                x += 1;
+            } else if (tiles[i] == 'K') {
+                position = new Vector3(x * tileSize, 0, y * tileSize - 1);
+                tile = Instantiate(empBorderRoadPrefab, position, Quaternion.Euler(0, 270, 0));
+                tile.transform.parent = transform;
+                x += 1;
+            } else if (tiles[i] == 'U') {
+                position = new Vector3(x * tileSize, 0, y * tileSize);
+                tile = Instantiate(empBorderRoadPrefab, position, Quaternion.Euler(0, 180, 0));
+                tile.transform.parent = transform;
+                x += 1;
+            } else if (tiles[i] == 'J') {
+                position = new Vector3(x * tileSize, 0, y * tileSize - 1);
+                tile = Instantiate(empBorderRoadPrefab, position, Quaternion.Euler(0, 90, 0));
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == 'v') {
