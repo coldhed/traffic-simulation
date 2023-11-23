@@ -101,8 +101,9 @@ class CarAgent(Agent):
             if not (self.pos in self.model.cellToNode and self.model.cellToNode[self.pos] == self.currNode):
                 # if we are, then remove the first element from the path
                 self.path.popleft()
-                
-        elif self.moveToDirection(streetDirections[0]):
+            
+        # as long as it's not a target node (since we know it's not a target), move with the flow to not block traffic   
+        elif not self.targetNodeInDirection(streetDirections[0]) and self.moveToDirection(streetDirections[0]):
             # we moved in a direction not corresponding to our path, if we are out of the node
             # that means we couldn't follow our path and we need to recalculate it
             
@@ -115,7 +116,7 @@ class CarAgent(Agent):
                         self.currNode = edge["to"]
                         self.generatePath()
                         break
-    
+        
     def moveOutsideNode(self):
         """
         Moves the car when it's outside a node.
@@ -214,6 +215,21 @@ class CarAgent(Agent):
             return True
         
         return False
+    
+    def targetNodeInDirection(self, direction):
+        if direction == "up":
+            targetCell = (self.pos[0], self.pos[1] + 1)
+
+        elif direction == "down":
+            targetCell = (self.pos[0], self.pos[1] - 1)
+                
+        elif direction == "left":
+            targetCell = (self.pos[0] - 1, self.pos[1])
+
+        else: # direction == "right"
+            targetCell = (self.pos[0] + 1, self.pos[1])
+            
+        return any(isinstance(agent, TargetAgent) for agent in self.model.grid[targetCell[0]][targetCell[1]])
     
     def isCarInCell(self, cell):
         """
