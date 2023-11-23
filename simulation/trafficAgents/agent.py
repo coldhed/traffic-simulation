@@ -295,9 +295,17 @@ class StoplightAgent(Agent):
     def __init__(self, unique_id, model, direction):
         super().__init__(unique_id, model)
         self.direction = direction
+        
+        self.color = "red" if direction == "horizontal" else "green"
+        self.shiftIn = 10
+        self.timer = 0
 
     def step(self):
-        pass 
+        self.timer += 1
+        
+        if self.timer == self.shiftIn:
+            self.timer = 0
+            self.color = "green" if self.color == "red" else "red"
 
 class StreetAgent(Agent):
     """
