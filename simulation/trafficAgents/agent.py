@@ -250,14 +250,14 @@ class CarAgent(Agent):
         """
         if direction == "up" or direction == "down":
             # check if the the cell to the right is a street
-            if self.pos[0] + 1 < self.model.grid.width and any(isinstance(agent, StreetAgent) for agent in self.model.grid[self.pos[0] + 1][self.pos[1]]):
+            if self.pos[0] + 1 < self.model.grid.width and any(isinstance(agent, StreetAgent) or isinstance(agent, StoplightAgent) for agent in self.model.grid[self.pos[0] + 1][self.pos[1]]):
                 return "left"
             else:
                 return "right"
             
         else: # direction == "left" or direction == "right"
             # check if the the cell to the top is a street
-            if self.pos[1] + 1 < self.model.grid.height and any(isinstance(agent, StreetAgent) for agent in self.model.grid[self.pos[0]][self.pos[1] + 1]):
+            if self.pos[1] + 1 < self.model.grid.height and any(isinstance(agent, StreetAgent) or isinstance(agent, StoplightAgent) for agent in self.model.grid[self.pos[0]][self.pos[1] + 1]):
                 return "down"
             else:
                 return "up"
