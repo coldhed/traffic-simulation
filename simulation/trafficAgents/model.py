@@ -132,13 +132,14 @@ class TrafficModel(Model):
 
     def step(self):
         '''Advance the model by one step.'''
-        car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
-        self.carCount += 1
-        
+        # comment one or the other line to spawn around 1 car per step or 4 cars per step
         pos = random.choice(self.spawnPoints)
-
+        # for pos in self.spawnPoints:
         if not any(isinstance(agent, CarAgent) for agent in self.grid[pos[0]][pos[1]]):
+            car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
+            self.carCount += 1
             self.grid.place_agent(car, pos)
             self.schedule.add(car)
         
         self.schedule.step()
+        print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
