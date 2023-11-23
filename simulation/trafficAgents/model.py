@@ -32,9 +32,7 @@ class TrafficModel(Model):
         self.readGraph("maps/2022_Graph.json")
         
         self.carCount = 0
-        car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
-        self.grid.place_agent(car, (0, 0))
-        self.schedule.add(car)
+        self.spawnPoints = [(0, 0), (0, len(self.map)- 1), (len(self.map[0]) - 1, 0), (len(self.map[0]) - 1, len(self.map) - 1)]
         
         
     def readMap(self, filename):
@@ -134,4 +132,13 @@ class TrafficModel(Model):
 
     def step(self):
         '''Advance the model by one step.'''
+        car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
+        self.carCount += 1
+        
+        pos = random.choice(self.spawnPoints)
+
+        if not any(isinstance(agent, CarAgent) for agent in self.grid[pos[0]][pos[1]]):
+            self.grid.place_agent(car, pos)
+            self.schedule.add(car)
+        
         self.schedule.step()
