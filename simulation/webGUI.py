@@ -21,7 +21,7 @@ def agent_portrayal(agent):
         portrayal["w"] = 0.9,
         portrayal["h"] = 0.9,
         # the color will eventually be based on the state of the stoplight, but that's not implemented yet
-        portrayal["Color"] = "red" if agent.direction == "horizontal" else "green"
+        portrayal["Color"] = "red" if agent.color == "red" else "green"
         portrayal["Layer"] = 1
     
     elif (isinstance(agent, StreetAgent)):
