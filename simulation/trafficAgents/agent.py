@@ -121,6 +121,14 @@ class CarAgent(Agent):
         """
         Moves the car when it's outside a node.
         """
+        # check if we are in a stoplight
+        for agent in self.model.grid[self.pos[0]][self.pos[1]]:
+            if isinstance(agent, StoplightAgent):
+                if agent.color == "red":
+                    return
+                else:
+                    break
+        
         # get the direction of the street we are in
         streetDirection = None
         for agent in self.model.grid[self.pos[0]][self.pos[1]]:
