@@ -414,8 +414,8 @@ MonoBehaviour:
   - {fileID: 649145907902717225, guid: 8741093f9f9b141a19d1d7c02af03b8e, type: 3}
   floor: {fileID: 0}
   timeToSpawn: 1
-  spawnAmount: 4
-  timeToUpdate: 0.5
+  spawnAmount: 1
+  timeToUpdate: 3
   tileSize: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

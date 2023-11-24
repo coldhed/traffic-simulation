@@ -181,6 +181,7 @@ public class ModelController : MonoBehaviour
             {
                 Vector3 pos = new Vector3(agent.x * tileSize, agent.y, agent.z * tileSize - tileSize);
                 GameObject car;
+
                 if (cars.TryGetValue(agent.id, out car))
                 {
                     // get the car controller
@@ -189,7 +190,7 @@ public class ModelController : MonoBehaviour
                 }
                 else
                 {
-                    car = Instantiate(carPrefabs[UnityEngine.Random.Range(0, carPrefabs.Length)], pos, Quaternion.identity);
+                    car = Instantiate(carPrefabs[UnityEngine.Random.Range(0, carPrefabs.Length)], Vector3.zero, Quaternion.identity);
                     cars[agent.id] = car;
 
                     // get the car controller

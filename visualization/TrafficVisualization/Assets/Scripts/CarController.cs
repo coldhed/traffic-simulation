@@ -95,8 +95,7 @@ public class CarController : MonoBehaviour
                                                       direction.y,
                                                       direction.z);
 
-        float angle = Vector3.SignedAngle(Vector3.forward, to, Vector3.down);
-
+        float angle = Vector3.SignedAngle(Vector3.forward, to - from, Vector3.down);
 
         Matrix4x4 rotate = HW_Transforms.RotateMat(angle, AXIS.Y);
         Matrix4x4 composite = move * rotate;
