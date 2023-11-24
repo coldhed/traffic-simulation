@@ -30,16 +30,16 @@ def initModel():
 
         return jsonify({"message":"Parameters recieved, model initiated."})
 
-@app.route('/getCarPositions', methods=['GET'])
+@app.route('/carPositions', methods=['GET'])
 def getCarPositions():
     global trafficModel
 
     if request.method == 'GET':
-        agentPositions = [{"id": str(a.unique_id), "x": x, "y":1, "z":z} for a, (x, z) in trafficModel.grid.coord_iter() if isinstance(a, CarAgent)]
+        agentPositions = [{"id": str(a.unique_id), "x": a.pos[0], "y":1, "z": a.pos[1]} for a in trafficModel.schedule.agents if isinstance(a, CarAgent)]
 
         return jsonify({'positions':agentPositions})
     
-@app.route('/getFinishedCars', methods=['GET'])
+@app.route('/finishedCars', methods=['GET'])
 def getFinishedCars():
     global trafficModel
 
@@ -48,14 +48,6 @@ def getFinishedCars():
 
         return jsonify({'finishedCars':finishedCars})
 
-@app.route('/getObstacles', methods=['GET'])
-def getObstacles():
-    global trafficModel
-
-    if request.method == 'GET':
-        carPositions = [{"id": str(a.unique_id), "x": x, "y":1, "z":z} for a, (x, z) in trafficModel.grid.coord_iter() if isinstance(a, ObstacleAgent)]
-
-        return jsonify({'positions':carPositions})
 
 @app.route('/update', methods=['GET'])
 def updateModel():
