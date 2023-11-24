@@ -14,7 +14,7 @@ class TrafficModel(Model):
         N: Number of agents in the simulation
         height, width: The size of the grid to model
     """
-    def __init__(self):
+    def __init__(self, timeToSpawn, spawnAmount):
 
         # RandomActivation is a scheduler that activates each agent once per step, in random order.
         self.schedule = RandomActivation(self)
@@ -33,6 +33,10 @@ class TrafficModel(Model):
         
         self.carCount = 0
         self.spawnPoints = [(0, 0), (0, len(self.map)- 1), (len(self.map[0]) - 1, 0), (len(self.map[0]) - 1, len(self.map) - 1)]
+        
+        self.timeToSpawn = timeToSpawn
+        self.spawnAmount = spawnAmount
+        self.timeSinceLastSpawn = 0
         
         
     def readMap(self, filename):
@@ -132,14 +136,24 @@ class TrafficModel(Model):
 
     def step(self):
         '''Advance the model by one step.'''
-        # comment one or the other line to spawn around 1 car per step or 4 cars per step
-        pos = random.choice(self.spawnPoints)
-        # for pos in self.spawnPoints:
-        if not any(isinstance(agent, CarAgent) for agent in self.grid[pos[0]][pos[1]]):
-            car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
-            self.carCount += 1
-            self.grid.place_agent(car, pos)
-            self.schedule.add(car)
+        self.timeSinceLastSpawn += 1
+        if self.timeSinceLastSpawn >= self.timeToSpawn:
+            self.timeSinceLastSpawn = 0
+            self.spawnCars()
         
         self.schedule.step()
         print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
+    
+    def spawnCars(self):
+        spawnPointsCopy = self.spawnPoints.copy()
+        
+        carsSpawned = 0
+        while len(spawnPointsCopy) and carsSpawned < self.spawnAmount:
+            pos = random.choice(spawnPointsCopy)
+            spawnPointsCopy.remove(pos)
+            if not any(isinstance(agent, CarAgent) for agent in self.grid[pos[0]][pos[1]]):
+                car = CarAgent(f"car{self.carCount}", self, random.choice(self.destinations))
+                self.carCount += 1
+                self.grid.place_agent(car, pos)
+                self.schedule.add(car)
+                carsSpawned += 1
