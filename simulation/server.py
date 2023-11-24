@@ -44,9 +44,10 @@ def getFinishedCars():
     global trafficModel
 
     if request.method == 'GET':
-        finishedCars = trafficModel.finishedCars
+        finishedCars = [{"id": str(carID), "x": 0, "y":1, "z": 0} for carID in trafficModel.finishedCars]
+        print(finishedCars)
 
-        return jsonify({'finishedCars':finishedCars})
+        return jsonify({'positions':finishedCars})
 
 
 @app.route('/update', methods=['GET'])

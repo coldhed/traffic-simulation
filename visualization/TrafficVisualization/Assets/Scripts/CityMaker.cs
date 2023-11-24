@@ -101,9 +101,9 @@ public class CityMaker : MonoBehaviour
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == 'D') {
-                position = new Vector3(x * tileSize, 0, y * tileSize);
-                tile = Instantiate(destPrefab, position, Quaternion.Euler(0, 90, 0));
-                tile.transform.parent = transform;
+                // position = new Vector3(x * tileSize, 0, y * tileSize);
+                // tile = Instantiate(destPrefab, position, Quaternion.Euler(0, 90, 0));
+                // tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == '#') {
                 int selection = Random.Range(0, buildingPrefab.Length);

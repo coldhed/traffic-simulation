@@ -151,4 +151,15 @@ public class CarController : MonoBehaviour
     {
         movementTime = time;
     }
+
+    public void DeleteSelf()
+    {
+        // delete the wheels
+        for (int i = 0; i < 4; ++i)
+        {
+            Destroy(wheels[i]);
+        }
+
+        Destroy(gameObject);
+    }
 }

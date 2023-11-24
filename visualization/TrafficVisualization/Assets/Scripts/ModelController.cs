@@ -80,6 +80,7 @@ public class ModelController : MonoBehaviour
     */
     string serverUrl = "http://localhost:8585";
     string getCarsEndpoint = "/carPositions";
+    string getFinishEndpoint = "/finishedCars";
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
     AgentsData carsData;
@@ -129,6 +130,7 @@ public class ModelController : MonoBehaviour
         else
         {
             StartCoroutine(GetCarsData());
+            StartCoroutine(GetFinishData());
         }
     }
 
@@ -199,31 +201,34 @@ public class ModelController : MonoBehaviour
                     carController.SetMovementTime(timeToUpdate);
                 }
             }
+        }
+    }
 
-            // // Once the data has been received, it is stored in the carsData variable.
-            // // Then, it iterates over the carsData.positions list to update the agents positions.
-            // carsData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
+    IEnumerator GetFinishData()
+    {
+        // The GetFinishData method is used to get the agents data from the server.
 
-            // foreach (AgentData agent in carsData.positions)
-            // {
-            //     Vector3 newAgentPosition = new Vector3(agent.x, agent.y, agent.z);
+        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getFinishEndpoint);
+        yield return www.SendWebRequest();
 
-            //     if (!started)
-            //     {
-            //         prevPositions[agent.id] = newAgentPosition;
-            //         agents[agent.id] = Instantiate(agentPrefab, newAgentPosition, Quaternion.identity);
-            //     }
-            //     else
-            //     {
-            //         Vector3 currentPosition = new Vector3();
-            //         if (currPositions.TryGetValue(agent.id, out currentPosition))
-            //             prevPositions[agent.id] = currentPosition;
-            //         currPositions[agent.id] = newAgentPosition;
-            //     }
-            // }
+        if (www.result != UnityWebRequest.Result.Success)
+            Debug.Log(www.error);
+        else
+        {
+            // Once the data has been received, it is stored in the carsData variable.
+            carsData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
 
-            // updated = true;
-            // if (!started) started = true;
+            foreach (AgentData agent in carsData.positions)
+            {
+                GameObject car;
+
+                if (cars.TryGetValue(agent.id, out car))
+                {
+                    // get the car controller
+                    CarController carController = car.GetComponent<CarController>();
+                    carController.DeleteSelf();
+                }
+            }
         }
     }
 }
