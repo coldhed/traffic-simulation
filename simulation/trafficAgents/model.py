@@ -38,6 +38,8 @@ class TrafficModel(Model):
         self.spawnAmount = spawnAmount
         self.timeSinceLastSpawn = 0
         
+        self.finishedCars = []
+        
         
     def readMap(self, filename):
         """
@@ -141,6 +143,7 @@ class TrafficModel(Model):
             self.timeSinceLastSpawn = 0
             self.spawnCars()
         
+        self.finishedCars = []
         self.schedule.step()
         print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
     
