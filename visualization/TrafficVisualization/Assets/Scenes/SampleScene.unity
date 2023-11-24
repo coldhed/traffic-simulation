@@ -412,11 +412,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carPrefabs:
   - {fileID: 649145907902717225, guid: 8741093f9f9b141a19d1d7c02af03b8e, type: 3}
+  - {fileID: 2421412975137037147, guid: 40002ac4de33b4281925d4d21fe0d064, type: 3}
+  - {fileID: 8375900289665777467, guid: 2a22a19f6308f4232aa519bb42398b35, type: 3}
+  - {fileID: 136492123245518073, guid: be9af27844c3a4064acbd6c22966011a, type: 3}
   floor: {fileID: 0}
   timeToSpawn: 1
-  spawnAmount: 1
-  timeToUpdate: 3
-  tileSize: 5
+  spawnAmount: 2
+  timeToUpdate: 0.5
+  tileSize: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
