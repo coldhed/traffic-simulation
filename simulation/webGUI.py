@@ -50,6 +50,8 @@ W = 24
 H = 25
 
 model_params = {
+    "timeToSpawn": 1,
+    "spawnAmount": 4 # max 4
 }
 
 grid = CanvasGrid(agent_portrayal, W, H, W*20, H*20)
