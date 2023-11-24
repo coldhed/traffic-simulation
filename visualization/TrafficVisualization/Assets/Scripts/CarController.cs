@@ -24,6 +24,8 @@ public class CarController : MonoBehaviour
 
     float timer = 0f;
 
+    float lastAngle = 0f;
+
     // gameobject list for the wheels
     GameObject[] wheels = new GameObject[4];
 
@@ -95,7 +97,16 @@ public class CarController : MonoBehaviour
                                                       direction.y,
                                                       direction.z);
 
-        float angle = Vector3.SignedAngle(Vector3.forward, to - from, Vector3.down);
+        float angle = 0.0f;
+        if (direction == to)
+        {
+            angle = lastAngle;
+        }
+        else
+        {
+            angle = Vector3.SignedAngle(Vector3.forward, to - from, Vector3.down);
+            lastAngle = angle;
+        }
 
         Matrix4x4 rotate = HW_Transforms.RotateMat(angle, AXIS.Y);
         Matrix4x4 composite = move * rotate;
@@ -141,6 +152,7 @@ public class CarController : MonoBehaviour
         {
             firstUpdate = false;
             from = next;
+            lastAngle = Vector3.SignedAngle(Vector3.forward, to - from, Vector3.down);
         }
 
         to = next;
