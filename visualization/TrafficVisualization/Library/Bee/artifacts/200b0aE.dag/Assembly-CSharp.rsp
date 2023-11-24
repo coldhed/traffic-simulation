@@ -352,6 +352,7 @@
 -analyzer:"/Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/CarController.cs"
 "Assets/Scripts/CityMaker.cs"
+"Assets/Scripts/ModelController.cs"
 "Assets/Scripts/Transforms.cs"
 -langversion:9.0
 

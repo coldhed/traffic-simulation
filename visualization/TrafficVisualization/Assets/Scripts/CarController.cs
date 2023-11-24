@@ -16,10 +16,11 @@ public class CarController : MonoBehaviour
     [SerializeField] GameObject wheel;
     [SerializeField] public Vector3 from;
     [SerializeField] public Vector3 to;
+    // time the movement takes
     [SerializeField] float movementTime = 1f;
     [SerializeField] Vector3[] wheelPositions;
 
-    // time the movement takes
+    bool firstUpdate = true;
 
     float timer = 0f;
 
@@ -42,7 +43,8 @@ public class CarController : MonoBehaviour
         // instantiate the wheels
         for (int i = 0; i < 4; ++i)
         {
-            wheels[i] = Instantiate(wheel, wheelPositions[i], Quaternion.identity);
+            // add the wheels in position, relative to where the car was instantiated
+            wheels[i] = Instantiate(wheel, wheelPositions[i] + gameObject.transform.position, Quaternion.identity);
         }
 
         // get the meshes and vertices for the car
@@ -134,7 +136,20 @@ public class CarController : MonoBehaviour
     public void SetNextWaypoint(Vector3 next)
     {
         from = to;
+
+        // if the car is just starting, set the from to the next
+        if (firstUpdate)
+        {
+            firstUpdate = false;
+            from = next;
+        }
+
         to = next;
         timer = 0f;
+    }
+
+    public void SetMovementTime(float time)
+    {
+        movementTime = time;
     }
 }
