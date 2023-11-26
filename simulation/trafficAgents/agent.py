@@ -18,8 +18,24 @@ class CarAgent(Agent):
         
         self.path = None
         
+        self.laneSpeed = deque([1])
+        
+        
+        self.lastDirection = None
+        
+        # speedMatrix[i][j] stores the speed the car has perceived from node i to node j
+        self.speedMatrix = [[1] * (len(self.model.nodeToCells) + 1) for _ in range(len(self.model.nodeToCells) + 1)]
+        
+        # test
+        self.speedMatrix[48][35] = 0.001
 
     def step(self):
+        if self.lastDirection == None:
+            # get the direction of the street we are in
+            for agent in self.model.grid[self.pos[0]][self.pos[1]]:
+                if isinstance(agent, StreetAgent):
+                    self.lastDirection = agent.directions[0]
+        
         # if we are in our destination, then we are done
         if self.pos == self.destination:
             self.model.schedule.remove(self)
@@ -40,6 +56,10 @@ class CarAgent(Agent):
         
         else:
             self.moveOutsideNode()
+            
+        # update the speed matrix with the information we gained, and calculate to see if there is a new path
+        self.updateSpeed()
+        self.generatePath()
             
         
 
@@ -84,7 +104,7 @@ class CarAgent(Agent):
                 
                 if nextN not in cameFrom:
                     cameFrom[nextN] = (node, edge["direction"])
-                    newCost = cost + edge["distance"]
+                    newCost = cost + (edge["distance"] / self.speedMatrix[int(node)][int(nextN)])
                     pq.put((heuristic(nextN) + newCost, newCost, nextN))
             
     def moveWithinNode(self):
@@ -97,17 +117,26 @@ class CarAgent(Agent):
 
 
         # if it can move in the direction it's pathing towards, then move there
-        if self.path[0][1] in streetDirections and self.moveToDirection(self.path[0][1]):            
+        if self.path[0][1] in streetDirections and self.moveToDirection(self.path[0][1]):  
+            self.movedCell()
+                      
             # check if we are out of the current node
             if not (self.pos in self.model.cellToNode and self.model.cellToNode[self.pos] == self.currNode):
                 # if we are, then remove the first element from the path
                 self.path.popleft()
+                
+                if len(self.path) > 0:
+                    # if there are still elements in the path, then we are in the next node
+                    self.currNode = self.path[0][0]
+                
+                # our lane speed also resets, since we are in a new street
+                self.laneSpeed = deque([1])
             
         # as long as it's not a target node (since we know it's not a target), move with the flow to not block traffic   
         elif not self.targetNodeInDirection(streetDirections[0]) and self.moveToDirection(streetDirections[0]):
+            self.movedCell()
             # we moved in a direction not corresponding to our path, if we are out of the node
             # that means we couldn't follow our path and we need to recalculate it
-            
             # check if we are out of the current node
             if not (self.pos in self.model.cellToNode and self.model.cellToNode[self.pos] == self.currNode):
                 # find the new node from where we need to recalculate the path
@@ -117,6 +146,12 @@ class CarAgent(Agent):
                         self.currNode = edge["to"]
                         self.generatePath()
                         break
+                
+                # our lane speed also resets, since we are in a new street
+                self.laneSpeed = deque([1])
+                
+        else:
+            self.didNotMoveCell()
         
     def moveOutsideNode(self):
         """
@@ -150,24 +185,56 @@ class CarAgent(Agent):
         # an obligatory lane exists if we are making a turn next node
         obligatoryLane = self.getObligatoryLane(streetDirection)
         
-        if obligatoryLane == None:
+        if obligatoryLane == None: 
+            # we don't need to be in a lane, but there is a best lane that depends on our next turn
             bestLane = self.getBestLane(streetDirection)
             
-            # try to move to the best lane
+            # if we are in the best lane try to move forwards, otherwise, try to change lane
             if bestLane == currentLane:
+                
+                # try to move forward
                 if not self.moveToDirection(streetDirection):
                     # if we didn't move, try to move to the other lane
-                    self.moveLane(streetDirection, otherLane)
-            else:
-                if not self.moveLane(streetDirection, bestLane):
-                    self.moveToDirection(streetDirection)
+                    if self.moveLane(streetDirection, otherLane):
+                        # we changed lane, so our lane speed resets
+                        self.laneSpeed = deque([1])
+                    else:
+                        # we couldn't move
+                        self.didNotMoveCell()
                 
-        elif currentLane == obligatoryLane:
-            self.moveToDirection(streetDirection)
-            
+                else:
+                    # we moved forwards
+                    self.movedCell()
+                    
+            # if we are not in the best lane, try to move to it, otherwise, try to move forwards
+            else:
+                # try to move to the best lane
+                if not self.moveLane(streetDirection, bestLane):
+                    # we couldn't move to the best lane, so try to move forwards
+                    if self.moveToDirection(streetDirection):
+                        # we moved forwards
+                        self.movedCell()
+                    else:
+                        # we couldn't move
+                        self.didNotMoveCell()
+                else:
+                    # we changed lane, so our lane speed resets
+                    self.laneSpeed = deque([1])
+        
+        # there is an obligatory lane
         else:
-            if not self.moveLane(streetDirection, obligatoryLane):
-                self.moveToDirection(streetDirection)
+            # if we are not in the obligatory lane, try to move to it
+            if currentLane != obligatoryLane and self.moveLane(streetDirection, obligatoryLane):
+                # we changed lane, so our lane speed resets
+                self.laneSpeed = deque([1])
+            # either we are in the obligatory lane or we couldn't move to it, either way, try to move forwards
+            else:
+                if self.moveToDirection(streetDirection):
+                    # we moved forwards
+                    self.movedCell()
+                else:
+                    # we couldn't move
+                    self.didNotMoveCell()    
                 
         self.lastDirection = streetDirection
             
@@ -200,7 +267,7 @@ class CarAgent(Agent):
         targetCell = (self.pos[0] + mod_x, self.pos[1] + mod_y)
 
         if not self.isCarInCell(targetCell):
-            self.model.grid.move_agent(self, targetCell)
+            self.model.grid.move_agent(self, targetCell)            
             return True
         
         return False
@@ -269,10 +336,13 @@ class CarAgent(Agent):
         # we always need to make a turn to reach the destination, so this shouldn't happen
         return None
                 
-    def getCurrentLane(self, direction):
+    def getCurrentLane(self, direction=None):
         """
         Returns the current lane of the car
         """
+        if direction == None:
+            direction = self.lastDirection
+        
         if direction == "up" or direction == "down":
             # check if the the cell to the right is a street
             if self.pos[0] + 1 < self.model.grid.width and any(isinstance(agent, StreetAgent) or isinstance(agent, StoplightAgent) for agent in self.model.grid[self.pos[0] + 1][self.pos[1]]):
@@ -286,6 +356,87 @@ class CarAgent(Agent):
                 return "down"
             else:
                 return "up"
+            
+    def movedCell(self):
+        """
+        Updates the speed of the car when it moves to a new cell.
+        """
+        if len(self.laneSpeed) == 3:
+            self.laneSpeed.popleft()
+        
+        self.laneSpeed.append(1)
+    
+    def didNotMoveCell(self):
+        """
+        Updates the speed of the car when it doesn't move to a new cell.
+        """
+        self.laneSpeed[-1] += 1
+        
+    def updateSpeed(self):        
+        # if our current node has no turns, we're reaching the end of the path so we don't need to update the speeds
+        if self.currNode not in self.model.adList:
+            return
+        
+        laneSpeed = sum(self.laneSpeed) / len(self.laneSpeed)
+        
+        # observe the other lane's speed from observing other cars
+        currentLane = self.getCurrentLane()
+        
+        laneToOtherLanePos = {"up":(0, -1), "down":(0, 1), "left":(1, 0), "right":(-1, 0)}
+        otherLanePos = laneToOtherLanePos[currentLane]
+        
+        otherLaneSpeed = None
+        for agent in self.model.grid[self.pos[0] + otherLanePos[0]][self.pos[1] + otherLanePos[1]]:
+            if isinstance(agent, CarAgent):
+                otherLaneSpeed = sum(agent.laneSpeed) / len(agent.laneSpeed)
+                break
+            
+        
+        if len(self.model.adList[self.currNode]) == 1 or len(self.model.nodeToCells[self.currNode]) == 2:
+            # if there is only one edge, then we are going straight
+            # so we update the speed of the edge, but we want to do propagate the velocity if next nodes also have one edge
+            # also, nodes with only two cells are adjacent to destinations, but in practice, only have one useful edge for 
+            # pathfinding since it's the only way to get to the destination
+            averageSpeed = laneSpeed if otherLaneSpeed == None else (laneSpeed + otherLaneSpeed) / 2
+            
+            currentNode = self.currNode
+            while len(self.model.adList[currentNode]) == 1 or len(self.model.nodeToCells[currentNode]) == 2:
+                
+                for edge in self.model.adList[currentNode]:
+                    self.speedMatrix[int(currentNode)][int(edge["to"])] = averageSpeed
+                    
+                    if len(self.model.nodeToCells[edge["to"]]) > 1:
+                        currentNode = edge["to"]
+                        break
+            
+        else:
+            for edge in self.model.adList[self.currNode]:
+                fromNode = int(self.currNode)
+                to = int(edge["to"])
+                
+                # the turn our lane makes
+                if edge["direction"] == currentLane:
+                    self.speedMatrix[fromNode][to] = laneSpeed
+                
+                # going straightforward
+                elif edge["direction"] == self.lastDirection:
+                    # if there are three turns, it's the average of the two lanes
+                    if len(self.model.adList[self.currNode]) == 3:
+                        self.speedMatrix[fromNode][to] = laneSpeed if otherLaneSpeed == None else (laneSpeed + otherLaneSpeed) / 2
+                    # there are two turns, so it's the speed of the lane not turning
+                    else:
+                        if currentLane in self.model.nodeToDirections[self.currNode]:
+                            if otherLaneSpeed != None:
+                                self.speedMatrix[fromNode][to] = otherLaneSpeed
+                        else:
+                            self.speedMatrix[fromNode][to] = laneSpeed
+                
+                # the turn the other lane makes
+                else:
+                    if otherLaneSpeed != None:
+                        self.speedMatrix[fromNode][to] = otherLaneSpeed
+                    
+        
                 
 class ObstacleAgent(Agent):
     """
