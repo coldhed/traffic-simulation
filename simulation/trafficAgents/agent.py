@@ -173,6 +173,20 @@ class CarAgent(Agent):
         
         if streetDirection == None:
             streetDirection = self.lastDirection
+            
+        # check if we would move into a node -> idea seems to not work but I'll leave it here in case we want to use it later
+        # nextNode = self.wouldMoveIntoNode(streetDirection)
+        # if nextNode:
+        #     # check intersection occupancy, if it's more than 50%, then don't move
+        #     carCount = 0
+        #     for agent in self.model.nodeToCells[nextNode]:
+        #         for a in self.model.grid[agent[0]][agent[1]]:
+        #             if isinstance(a, CarAgent):
+        #                 carCount += 1
+            
+        #     if carCount / len(self.model.nodeToCells[nextNode]) > 0.5:
+        #         self.didNotMoveCell()
+        #         return
         
         lanes = ["up", "down"] if streetDirection == "left" or streetDirection == "right" else ["left", "right"]
         
@@ -436,7 +450,26 @@ class CarAgent(Agent):
                     if otherLaneSpeed != None:
                         self.speedMatrix[fromNode][to] = otherLaneSpeed
                     
+    def wouldMoveIntoNode(self, direction):
+        """
+        Returns true if the car would move into a node in the given direction.
+        """
+        if direction == "up":
+            targetCell = (self.pos[0], self.pos[1] + 1)
+
+        elif direction == "down":
+            targetCell = (self.pos[0], self.pos[1] - 1)
+                
+        elif direction == "left":
+            targetCell = (self.pos[0] - 1, self.pos[1])
+
+        else: # direction == "right"
+            targetCell = (self.pos[0] + 1, self.pos[1])
         
+        if targetCell in self.model.cellToNode:
+            return self.model.cellToNode[targetCell]
+        else:
+            return False
                 
 class ObstacleAgent(Agent):
     """
