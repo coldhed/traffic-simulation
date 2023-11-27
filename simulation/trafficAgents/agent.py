@@ -20,14 +20,13 @@ class CarAgent(Agent):
         
         self.laneSpeed = deque([1])
         
-        
         self.lastDirection = None
         
         # speedMatrix[i][j] stores the speed the car has perceived from node i to node j
         self.speedMatrix = [[1] * (len(self.model.nodeToCells) + 1) for _ in range(len(self.model.nodeToCells) + 1)]
         
-        # test
-        self.speedMatrix[48][35] = 0.001
+        self.patienceLimit = 15
+        self.stationaryTime = 0
 
     def step(self):
         if self.lastDirection == None:
@@ -49,13 +48,17 @@ class CarAgent(Agent):
             # if we are not in a node, it stores the node we are going towards, since we have to calculate the path from there
             self.currNode = self.model.cellToNode[self.pos]
             
-            if self.path == None:
+            if self.path == None or self.path[0][0] != self.currNode:
                 self.generatePath()
                 
             self.moveWithinNode()
         
-        else:
+        else:                
             self.moveOutsideNode()
+            
+        # if we have been stationary for too long, then we are stuck, try to move somewhere else
+        if self.stationaryTime > self.patienceLimit:
+            self.moveToUnstuck()
             
         # update the speed matrix with the information we gained, and calculate to see if there is a new path
         self.updateSpeed()
@@ -114,7 +117,6 @@ class CarAgent(Agent):
         for agent in self.model.grid[self.pos[0]][self.pos[1]]:
             if isinstance(agent, StreetAgent):
                 streetDirections = agent.directions
-
 
         # if it can move in the direction it's pathing towards, then move there
         if self.path[0][1] in streetDirections and self.moveToDirection(self.path[0][1]):  
@@ -279,6 +281,7 @@ class CarAgent(Agent):
             mod_x += 1
             
         targetCell = (self.pos[0] + mod_x, self.pos[1] + mod_y)
+        
 
         if not self.isCarInCell(targetCell):
             self.model.grid.move_agent(self, targetCell)            
@@ -331,6 +334,7 @@ class CarAgent(Agent):
         """
         Returns the preferred lane of the car, based on the direction it's going and the next step in the path
         """
+        
         turnDirection = self.path[0][1]
         
         if streetDirection == turnDirection:
@@ -379,12 +383,14 @@ class CarAgent(Agent):
             self.laneSpeed.popleft()
         
         self.laneSpeed.append(1)
+        self.stationaryTime = 0
     
     def didNotMoveCell(self):
         """
         Updates the speed of the car when it doesn't move to a new cell.
         """
         self.laneSpeed[-1] += 1
+        self.stationaryTime += 1
         
     def updateSpeed(self):        
         # if our current node has no turns, we're reaching the end of the path so we don't need to update the speeds
@@ -470,7 +476,83 @@ class CarAgent(Agent):
             return self.model.cellToNode[targetCell]
         else:
             return False
+    
+    def moveToUnstuck(self):
+        """
+        Moves the car to a cell that is not occupied.
+        """
+        # if we are in a stoplight, we should wait 
+        if any(isinstance(agent, StoplightAgent) for agent in self.model.grid[self.pos[0]][self.pos[1]]):
+            return
+        
+        startedInNode = self.pos in self.model.cellToNode
+        
+        direction = self.lastDirection
+        
+        # find the street agent we are in
+        for agent in self.model.grid[self.pos[0]][self.pos[1]]:
+            if isinstance(agent, StreetAgent):
+                if len(agent.directions) == 1:
+                    direction = agent.directions[0]
+        
+        # try to move to any of the three squares in front of our direction
+        if direction == "up":
+            y = self.pos[1] + 1
+            
+            targetCells = [(x, y) for x in range(max(self.pos[0] - 1, 0), min(self.pos[0] + 2, self.model.grid.width))]
+        
+        elif direction == "down":
+            y = self.pos[1] - 1
+            
+            targetCells = [(x, y) for x in range(max(self.pos[0] - 1, 0), min(self.pos[0] + 2, self.model.grid.width))]
+        
+        elif direction == "left":
+            x = self.pos[0] - 1
+            
+            targetCells = [(x, y) for y in range(max(self.pos[1] - 1, 0), min(self.pos[1] + 2, self.model.grid.height))]
+            
+        else: # direction == "right"
+            x = self.pos[0] + 1
+            
+            targetCells = [(x, y) for y in range(max(self.pos[1] - 1, 0), min(self.pos[1] + 2, self.model.grid.height))]
+        
+        for cell in targetCells:
+            if not self.isCarInCell(cell) and cell not in self.model.destinations:
+                # check if the cell is either a street or a stoplight
+                if not any(isinstance(agent, StreetAgent) or isinstance(agent, StoplightAgent) for agent in self.model.grid[cell[0]][cell[1]]):
+                    continue
                 
+                self.model.grid.move_agent(self, cell)
+                self.movedCell()
+                
+                # if we were in a node, check if we are still in it
+                if startedInNode:
+                    # we are no longer in a node, so our current node will be the target node of the edge in the direction we are moving in
+                    if self.pos not in self.model.cellToNode:
+                        # find the direction of the street we are in
+                        streetDirection = self.lastDirection
+                        for agent in self.model.grid[self.pos[0]][self.pos[1]]:
+                            if isinstance(agent, StreetAgent):
+                                streetDirection = agent.directions[0]
+                            
+                        # find the new node from where we need to recalculate the path
+                        for edge in self.model.adList[self.currNode]:
+                            if edge["direction"] == streetDirection:
+                                self.currNode = edge["to"]
+                                self.generatePath()
+                                self.laneSpeed = deque([1])
+                                
+                                break
+                    
+                    elif self.model.cellToNode[self.pos] != self.currNode:
+                        self.currNode = self.model.cellToNode[self.pos]
+                        self.generatePath()
+                        self.laneSpeed = deque([1])                    
+                
+                return True
+            
+        return False
+    
 class ObstacleAgent(Agent):
     """
     Obstacle agent. Just to add obstacles to the grid.
