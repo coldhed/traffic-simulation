@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 136492123245518073}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 159.20819, y: -0.0000009536743, z: 30.726627}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angularVelocity: -90
-  wheel: {fileID: 3676810876868165360, guid: 7384c1745ec4840e884c6233c862572b, type: 3}
+  wheel: {fileID: 2927049009837055867, guid: 0e0387366fdc541c7ae9a552d41ba8ef, type: 3}
+  wheel2: {fileID: 277304272230731916, guid: 81861a0da3d114fb0b63d94e1e8b4606, type: 3}
   from: {x: 0, y: 0, z: 0}
   to: {x: 0, y: 0, z: 5}
   movementTime: 1
