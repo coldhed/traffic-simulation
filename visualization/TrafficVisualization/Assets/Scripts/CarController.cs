@@ -14,6 +14,7 @@ public class CarController : MonoBehaviour
 {
     [SerializeField] float angularVelocity = 90f;
     [SerializeField] GameObject wheel;
+    [SerializeField] GameObject wheel2;
     [SerializeField] public Vector3 from;
     [SerializeField] public Vector3 to;
     // time the movement takes
@@ -46,7 +47,10 @@ public class CarController : MonoBehaviour
         for (int i = 0; i < 4; ++i)
         {
             // add the wheels in position, relative to where the car was instantiated
-            wheels[i] = Instantiate(wheel, wheelPositions[i] + gameObject.transform.position, Quaternion.identity);
+            if (i<2)
+                wheels[i] = Instantiate(wheel, wheelPositions[i] + gameObject.transform.position, Quaternion.identity);
+            else
+                wheels[i] = Instantiate(wheel2, wheelPositions[i] + gameObject.transform.position, Quaternion.identity);
         }
 
         // get the meshes and vertices for the car
