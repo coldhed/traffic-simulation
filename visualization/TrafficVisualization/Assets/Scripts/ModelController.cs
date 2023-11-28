@@ -88,7 +88,6 @@ public class ModelController : MonoBehaviour
 
 
     public GameObject[] carPrefabs;
-    public GameObject floor;
     public int timeToSpawn, spawnAmount;
     public float timeToUpdate = 5.0f;
     public float tileSize = 10f;
@@ -99,9 +98,6 @@ public class ModelController : MonoBehaviour
         carsData = new AgentsData();
 
         cars = new Dictionary<string, GameObject>();
-
-        // floor.transform.localScale = new Vector3((float)width / 10, 1, (float)height / 10);
-        // floor.transform.localPosition = new Vector3((float)width / 2 - 0.5f, 0, (float)height / 2 - 0.5f);
 
         timer = timeToUpdate;
 
