@@ -25,7 +25,7 @@ class CarAgent(Agent):
         # speedMatrix[i][j] stores the speed the car has perceived from node i to node j
         self.speedMatrix = [[1] * (len(self.model.nodeToCells) + 1) for _ in range(len(self.model.nodeToCells) + 1)]
         
-        self.patienceLimit = 15
+        self.patienceLimit = 11
         self.stationaryTime = 0
         
     def step(self):

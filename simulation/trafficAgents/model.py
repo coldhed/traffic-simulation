@@ -143,9 +143,10 @@ class TrafficModel(Model):
             self.timeSinceLastSpawn = 0
             self.spawnCars()
         
-        self.finishedCars = []
-        self.schedule.step()
-        print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
+        if self.running:
+            self.finishedCars = []
+            self.schedule.step()
+            print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
     
     def spawnCars(self):
         spawnPointsCopy = self.spawnPoints.copy()
@@ -160,3 +161,7 @@ class TrafficModel(Model):
                 self.grid.place_agent(car, pos)
                 self.schedule.add(car)
                 carsSpawned += 1
+        
+        if carsSpawned == 0:
+            print("No cars spawned")
+            self.running = False
