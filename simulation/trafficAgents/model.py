@@ -23,13 +23,13 @@ class TrafficModel(Model):
         
         self.destinations = []
 
-        self.readMap("maps/2022.txt")
+        self.readMap("maps/2023.txt")
         
         # Multigrid is a special type of grid where each cell can contain multiple agents.
         self.grid = MultiGrid(len(self.map[0]), len(self.map), torus = False) 
         
         self.populateGrid()
-        self.readGraph("maps/2022_Graph.json")
+        self.readGraph("maps/2023_Graph.json")
         
         self.carCount = 0
         self.spawnPoints = [(0, 0), (0, len(self.map)- 1), (len(self.map[0]) - 1, 0), (len(self.map[0]) - 1, len(self.map) - 1)]

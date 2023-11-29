@@ -27,7 +27,7 @@ class CarAgent(Agent):
         
         self.patienceLimit = 15
         self.stationaryTime = 0
-
+        
     def step(self):
         if self.lastDirection == None:
             # get the direction of the street we are in
@@ -47,15 +47,15 @@ class CarAgent(Agent):
             # currNode stores the current Node we are in (not the cell)
             # if we are not in a node, it stores the node we are going towards, since we have to calculate the path from there
             self.currNode = self.model.cellToNode[self.pos]
-            
+                
             if self.path == None or self.path[0][0] != self.currNode:
                 self.generatePath()
-                
+            
             self.moveWithinNode()
         
-        else:                
+        else:
             self.moveOutsideNode()
-            
+        
         # if we have been stationary for too long, then we are stuck, try to move somewhere else
         if self.stationaryTime > self.patienceLimit:
             self.moveToUnstuck()
@@ -118,22 +118,22 @@ class CarAgent(Agent):
             if isinstance(agent, StreetAgent):
                 streetDirections = agent.directions
 
+
         # if it can move in the direction it's pathing towards, then move there
         if self.path[0][1] in streetDirections and self.moveToDirection(self.path[0][1]):  
             self.movedCell()
-                      
+            
             # check if we are out of the current node
             if not (self.pos in self.model.cellToNode and self.model.cellToNode[self.pos] == self.currNode):
                 # if we are, then remove the first element from the path
                 self.path.popleft()
-                
                 if len(self.path) > 0:
                     # if there are still elements in the path, then we are in the next node
                     self.currNode = self.path[0][0]
                 
                 # our lane speed also resets, since we are in a new street
                 self.laneSpeed = deque([1])
-            
+        
         # as long as it's not a target node (since we know it's not a target), move with the flow to not block traffic   
         elif not self.targetNodeInDirection(streetDirections[0]) and self.moveToDirection(streetDirections[0]):
             self.movedCell()
@@ -154,6 +154,7 @@ class CarAgent(Agent):
                 
         else:
             self.didNotMoveCell()
+            
         
     def moveOutsideNode(self):
         """
@@ -411,7 +412,6 @@ class CarAgent(Agent):
                 otherLaneSpeed = sum(agent.laneSpeed) / len(agent.laneSpeed)
                 break
             
-        
         if len(self.model.adList[self.currNode]) == 1 or len(self.model.nodeToCells[self.currNode]) == 2:
             # if there is only one edge, then we are going straight
             # so we update the speed of the edge, but we want to do propagate the velocity if next nodes also have one edge
@@ -421,7 +421,6 @@ class CarAgent(Agent):
             
             currentNode = self.currNode
             while len(self.model.adList[currentNode]) == 1 or len(self.model.nodeToCells[currentNode]) == 2:
-                
                 for edge in self.model.adList[currentNode]:
                     self.speedMatrix[int(currentNode)][int(edge["to"])] = averageSpeed
                     
@@ -456,6 +455,7 @@ class CarAgent(Agent):
                     if otherLaneSpeed != None:
                         self.speedMatrix[fromNode][to] = otherLaneSpeed
                     
+            
     def wouldMoveIntoNode(self, direction):
         """
         Returns true if the car would move into a node in the given direction.
@@ -518,8 +518,8 @@ class CarAgent(Agent):
         
         for cell in targetCells:
             if not self.isCarInCell(cell) and cell not in self.model.destinations:
-                # check if the cell is either a street or a stoplight
-                if not any(isinstance(agent, StreetAgent) or isinstance(agent, StoplightAgent) for agent in self.model.grid[cell[0]][cell[1]]):
+                # check if the cell is a street or a stoplight
+                if not any(isinstance(agent, StreetAgent) for agent in self.model.grid[cell[0]][cell[1]]):
                     continue
                 
                 self.model.grid.move_agent(self, cell)
