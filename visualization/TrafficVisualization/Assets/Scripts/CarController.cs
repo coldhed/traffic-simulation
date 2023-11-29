@@ -47,7 +47,7 @@ public class CarController : MonoBehaviour
         for (int i = 0; i < 4; ++i)
         {
             // add the wheels in position, relative to where the car was instantiated
-            if (i<2)
+            if (i < 2)
                 wheels[i] = Instantiate(wheel, wheelPositions[i] + gameObject.transform.position, Quaternion.identity);
             else
                 wheels[i] = Instantiate(wheel2, wheelPositions[i] + gameObject.transform.position, Quaternion.identity);
@@ -125,6 +125,7 @@ public class CarController : MonoBehaviour
         // Assign the new vertices to the mesh
         mesh.vertices = newVertices;
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
 
         // rotate the wheels
         Matrix4x4 spin = HW_Transforms.RotateMat(angularVelocity * Time.time, AXIS.X);
@@ -144,6 +145,7 @@ public class CarController : MonoBehaviour
 
             wheelMeshes[i].vertices = wheelNewVertices[i];
             wheelMeshes[i].RecalculateNormals();
+            wheelMeshes[i].RecalculateBounds();
         }
     }
 
