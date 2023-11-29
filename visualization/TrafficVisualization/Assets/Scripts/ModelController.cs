@@ -50,6 +50,42 @@ public class AgentsData
     public AgentsData() => this.positions = new List<AgentData>();
 }
 
+
+[Serializable]
+public class StopLightData
+{
+    /*
+    The StopLightData class is used to store the data of Stop Light agent.
+    
+    Attributes:
+        id (string): The id of the agent.
+        color (string): The color of the light.
+
+    */
+    public string id;
+    public string color;
+    public string direction;
+    public float x, y, z;
+
+    public StopLightData(string id, string color, string direction, float x, float y, float z)
+    {
+        this.id = id;
+        this.color = color;
+        this.direction = direction;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
+[Serializable]
+public class StopLightsData
+{
+    public List<StopLightData> stopLights;
+
+    public StopLightsData() => this.stopLights = new List<StopLightData>();
+}
+
 public class ModelController : MonoBehaviour
 {
     /*
@@ -83,11 +119,15 @@ public class ModelController : MonoBehaviour
     string getFinishEndpoint = "/finishedCars";
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
+    string getStopLightEndpoint = "/stopLightStatus";
     AgentsData carsData;
+    StopLightsData stopLightD;
     Dictionary<string, GameObject> cars;
+    Dictionary<string, GameObject> stoplights;
 
 
     public GameObject[] carPrefabs;
+    [SerializeField] GameObject semaphorePrefab;
     public int timeToSpawn, spawnAmount;
     public float timeToUpdate = 5.0f;
     public float tileSize = 10f;
@@ -98,6 +138,7 @@ public class ModelController : MonoBehaviour
         carsData = new AgentsData();
 
         cars = new Dictionary<string, GameObject>();
+        stoplights = new Dictionary<string, GameObject>();
 
         timer = timeToUpdate;
 
@@ -114,6 +155,7 @@ public class ModelController : MonoBehaviour
             timer = timeToUpdate;
             StartCoroutine(UpdateSimulation());
         }
+        
     }
 
     IEnumerator UpdateSimulation()
@@ -127,6 +169,7 @@ public class ModelController : MonoBehaviour
         {
             StartCoroutine(GetCarsData());
             StartCoroutine(GetFinishData());
+            StartCoroutine(GetStopLight());
         }
     }
 
@@ -226,5 +269,64 @@ public class ModelController : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator GetStopLight()
+    {
+        // The GetFinishData method is used to get the agents data from the server.
+
+        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getStopLightEndpoint);
+        yield return www.SendWebRequest();
+
+        if (www.result != UnityWebRequest.Result.Success)
+            Debug.Log(www.error);
+        else
+        {
+            // Once the data has been received, it is stored in the carsData variable.
+            stopLightD = JsonUtility.FromJson<StopLightsData>(www.downloadHandler.text);
+
+            foreach (StopLightData agent in stopLightD.stopLights)
+            {
+                Vector3 pos = new Vector3(agent.x * tileSize, agent.y, agent.z * tileSize - tileSize);
+                GameObject semaphore;
+                string tempcolor = agent.color;
+                Color mycolor;
+
+                if (tempcolor == "red")
+                {
+                    mycolor = Color.red;
+                }
+                else 
+                {
+                    mycolor = Color.green;
+                }
+
+                if (stoplights.TryGetValue(agent.id, out semaphore))
+                {
+                    // get the car controller
+                    SColorLight sColorLight = semaphore.GetComponent<SColorLight>();
+                    sColorLight.SetLightColor(mycolor);
+                }
+                else
+                {
+                    string mydir = agent.direction;
+
+                    if (mydir == "horizontal")
+                    {
+                        pos = new Vector3(agent.x * tileSize + tileSize/2, agent.y, agent.z * tileSize - tileSize);
+                        semaphore = Instantiate(semaphorePrefab, pos, Quaternion.Euler(0, 90, 0));                    }
+                    else 
+                    {
+                        semaphore = Instantiate(semaphorePrefab, pos, Quaternion.identity);
+                    }
+                    // semaphore = Instantiate(semaphorePrefab, pos, Quaternion.identity);
+                    stoplights[agent.id] = semaphore;
+
+                    SColorLight sColorLight = semaphore.GetComponent<SColorLight>();
+                    sColorLight.SetLightColor(mycolor);
+                }
+            }
+        }
+
     }
 }

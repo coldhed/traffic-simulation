@@ -353,6 +353,7 @@
 "Assets/Scripts/CarController.cs"
 "Assets/Scripts/CityMaker.cs"
 "Assets/Scripts/ModelController.cs"
+"Assets/Scripts/SColorLight.cs"
 "Assets/Scripts/Transforms.cs"
 -langversion:9.0
 

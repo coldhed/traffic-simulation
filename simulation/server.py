@@ -58,5 +58,14 @@ def updateModel():
         currentStep += 1
         return jsonify({'message':f'Model updated to step {currentStep}.', 'currentStep':currentStep})
 
+@app.route('/stopLightStatus', methods=['GET'])
+def getStopLights():
+    global trafficModel
+
+    if request.method == 'GET':
+        stoplights = [{"id": str(a.pos[0]) + "," + str(a.pos[1]), "x": a.pos[0], "y":1, "z": a.pos[1], "color": a.color, "direction": a.direction} for a in trafficModel.schedule.agents if isinstance(a, StoplightAgent)]
+        return jsonify({'stopLights':stoplights})
+
+
 if __name__=='__main__':
     app.run(host="localhost", port=8585, debug=True)
