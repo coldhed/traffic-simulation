@@ -319,11 +319,9 @@ public class ModelController : MonoBehaviour
                     {
                         semaphore = Instantiate(semaphorePrefab, pos, Quaternion.identity);
                     }
-                    // semaphore = Instantiate(semaphorePrefab, pos, Quaternion.identity);
                     stoplights[agent.id] = semaphore;
 
-                    SColorLight sColorLight = semaphore.GetComponent<SColorLight>();
-                    sColorLight.SetLightColor(mycolor);
+
                 }
             }
         }
