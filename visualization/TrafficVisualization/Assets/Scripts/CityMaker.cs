@@ -12,7 +12,6 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject empBorderRoadPrefab;
     [SerializeField] GameObject destPrefab;
     [SerializeField] GameObject[] buildingPrefab;
-    [SerializeField] GameObject semaphorePrefab;
     [SerializeField] int tileSize;
 
     // Start is called before the first frame update
@@ -80,24 +79,10 @@ public class CityMaker : MonoBehaviour
                 position = new Vector3(x * tileSize, 0, y * tileSize - 6);
                 tile = Instantiate(crossRoadPrefab, position, Quaternion.Euler(0, 270, 0));
                 tile.transform.parent = transform;
-                tile = Instantiate(semaphorePrefab, position, Quaternion.identity);
-                tile.transform.parent = transform;
-                x += 1;
-            } else if (tiles[i] == 'c') {
-                position = new Vector3(x * tileSize, 0, y * tileSize + 12);
-                tile = Instantiate(semaphorePrefab, position, Quaternion.identity);
-                tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == 'S') {
                 position = new Vector3(x * tileSize + 5, 0, y * tileSize);
                 tile = Instantiate(crossRoadPrefab, position, Quaternion.identity);
-                tile.transform.parent = transform;
-                tile = Instantiate(semaphorePrefab, position, Quaternion.Euler(0, 90, 0));
-                tile.transform.parent = transform;
-                x += 1;
-            } else if (tiles[i] == 'C') {
-                position = new Vector3(x * tileSize + 5, 0, y * tileSize);
-                tile = Instantiate(semaphorePrefab, position, Quaternion.Euler(0, 90, 0));
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == 'D') {
@@ -119,7 +104,6 @@ public class CityMaker : MonoBehaviour
                 y -= 1;
             }
         }
-
     }
 }
 
