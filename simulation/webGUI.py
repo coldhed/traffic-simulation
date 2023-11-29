@@ -50,7 +50,7 @@ W = 24
 H = 25
 
 model_params = {
-    "timeToSpawn": 1,
+    "timeToSpawn": 5,
     "spawnAmount": 4 # max 4
 }
 

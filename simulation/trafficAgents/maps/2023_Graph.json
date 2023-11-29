@@ -915,7 +915,6 @@
         {
             "id": "47",
             "directions": [
-                "up",
                 "left"
             ],
             "cells": [
@@ -1520,12 +1519,6 @@
             "to": "46",
             "distance": 3,
             "direction": "left"
-        },
-        {
-            "from": "47",
-            "to": "41",
-            "distance": 1,
-            "direction": "up"
         },
         {
             "from": "48",
