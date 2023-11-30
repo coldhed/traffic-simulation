@@ -128,7 +128,11 @@ public class ModelController : MonoBehaviour
 
     public GameObject[] carPrefabs;
     [SerializeField] GameObject semaphorePrefab;
-    public int timeToSpawn, spawnAmount;
+
+    public int timeToSpawn;
+
+    [Range(1, 4)]
+    public int spawnAmount;
     public bool sendsData;
     public float timeToUpdate = 5.0f;
     public float tileSize = 10f;
@@ -145,6 +149,12 @@ public class ModelController : MonoBehaviour
 
         // Launches a couroutine to send the configuration to the server.
         StartCoroutine(SendConfiguration());
+    }
+
+    private void OnValidate()
+    {
+        timeToUpdate = Mathf.Max(0.1f, timeToUpdate);
+        timeToSpawn = Mathf.Max(1, timeToSpawn);
     }
 
     private void Update()
