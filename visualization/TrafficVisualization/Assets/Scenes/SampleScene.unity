@@ -524,7 +524,7 @@ MonoBehaviour:
   timeToSpawn: 3
   spawnAmount: 4
   sendsData: 1
-  timeToUpdate: 0.2
+  timeToUpdate: 0.1
   tileSize: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
