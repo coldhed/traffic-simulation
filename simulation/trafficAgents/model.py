@@ -46,7 +46,8 @@ class TrafficModel(Model):
         self.timeToSendData = 100
         self.stepsSinceLastData = 0
         self.URI = "http://52.1.3.19:8585/api"
-        self.ep = "/validate_attempt"
+        self.ep = "/attempts"
+        self.steps = 0
         
         
     def readMap(self, filename):
@@ -153,7 +154,12 @@ class TrafficModel(Model):
             
         if self.sendsData:
             self.stepsSinceLastData += 1
-            if self.stepsSinceLastData >= self.timeToSendData:
+            
+            if self.steps >= 1000:
+                self.running = False
+                self.sendData()
+            
+            elif self.stepsSinceLastData >= self.timeToSendData:
                 self.stepsSinceLastData = 0
                 self.sendData()
         
@@ -162,6 +168,8 @@ class TrafficModel(Model):
             self.schedule.step()
             print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
             print("total finished cars: ", len(self.totalFinishedCars))
+            
+        self.steps += 1
     
     def spawnCars(self):
         spawnPointsCopy = self.spawnPoints.copy()
