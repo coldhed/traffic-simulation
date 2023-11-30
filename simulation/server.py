@@ -21,12 +21,12 @@ def initModel():
     if request.method == 'POST':
         timeToSpawn = int(request.form.get('timeToSpawn'))
         spawnAmount = int(request.form.get('spawnAmount'))
-
+        sendsData = request.form.get('sendsData') == "True"
+        print(request.form.get('sendsData'))
+        print("sendsData: ", sendsData)
         currentStep = 0
 
-        print(request.form)
-        print(timeToSpawn, spawnAmount)
-        trafficModel = TrafficModel(timeToSpawn, spawnAmount)
+        trafficModel = TrafficModel(timeToSpawn, spawnAmount, sendsData)
 
         return jsonify({"message":"Parameters recieved, model initiated."})
 
@@ -56,6 +56,7 @@ def updateModel():
     if request.method == 'GET':
         trafficModel.step()
         currentStep += 1
+        print("step: ", currentStep)
         return jsonify({'message':f'Model updated to step {currentStep}.', 'currentStep':currentStep})
 
 @app.route('/stopLightStatus', methods=['GET'])

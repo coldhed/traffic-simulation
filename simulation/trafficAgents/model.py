@@ -1,6 +1,7 @@
 import os
 import random
 import json
+import requests
 
 from mesa import Model, agent
 from mesa.time import RandomActivation
@@ -14,7 +15,7 @@ class TrafficModel(Model):
         N: Number of agents in the simulation
         height, width: The size of the grid to model
     """
-    def __init__(self, timeToSpawn, spawnAmount):
+    def __init__(self, timeToSpawn, spawnAmount, sendsData = False):
 
         # RandomActivation is a scheduler that activates each agent once per step, in random order.
         self.schedule = RandomActivation(self)
@@ -39,6 +40,11 @@ class TrafficModel(Model):
         self.timeSinceLastSpawn = 0
         
         self.finishedCars = []
+        
+        self.timeToSendData = 100
+        self.stepsSinceLastData = 0
+        self.URI = "http://52.1.3.19:8585/api"
+        self.ep = "/validate_attempt"
         
         
     def readMap(self, filename):
@@ -142,6 +148,12 @@ class TrafficModel(Model):
         if self.timeSinceLastSpawn >= self.timeToSpawn:
             self.timeSinceLastSpawn = 0
             self.spawnCars()
+            
+        if self.sendData:
+            self.stepsSinceLastData += 1
+            if self.stepsSinceLastData >= self.timeToSendData:
+                self.stepsSinceLastData = 0
+                self.sendData()
         
         if self.running:
             self.finishedCars = []
@@ -165,3 +177,23 @@ class TrafficModel(Model):
         if carsSpawned == 0:
             print("No cars spawned")
             self.running = False
+            
+    def sendData(self):
+        data = {
+            "year": 2023,
+            "classroom": 302,
+            "name": "Mariel y Sant",
+            "num_cars": len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]),
+        }
+        
+        headers = {
+            "Content-Type": "application/json"
+        }
+        
+        try:
+            response = requests.post(self.URI + self.ep, data=json.dumps(data), headers=headers)
+        
+            print("Request " + "successful" if response.status_code == 200 else "failed", "Status code:", response.status_code)
+            print("Response:", response.json())
+        except:
+            print("Request failed")
