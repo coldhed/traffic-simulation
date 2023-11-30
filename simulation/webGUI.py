@@ -2,7 +2,7 @@ from trafficAgents.model import TrafficModel
 from trafficAgents.agent import CarAgent, ObstacleAgent, StoplightAgent, StreetAgent, TargetAgent
 from mesa.visualization import CanvasGrid, BarChartModule, PieChartModule
 from mesa.visualization import ModularServer
-from mesa.visualization import Slider
+from mesa.visualization import Slider, Checkbox
 
 def agent_portrayal(agent):
     if agent is None: return
@@ -50,22 +50,12 @@ W = 24
 H = 25
 
 model_params = {
-    "timeToSpawn": 10,
-    "spawnAmount": 4 # max 4
+    "timeToSpawn": Slider("Time to Spawn", 10, 1, 50, 1),
+    "spawnAmount": Slider("Spawn Amount", 4, 1, 4, 1), # max 4
+    "sendsData": Checkbox("Sends Data", False)
 }
 
 grid = CanvasGrid(agent_portrayal, W, H, W*20, H*20)
-
-# bar_chart = BarChartModule(
-#     [{"Label":"Steps", "Color":"#AA0000"}], 
-#     scope="agent", sorting="ascending", sort_by="Steps")
-
-# pie_chart = PieChartModule(
-#     [
-#         {"Label": "Trash Remaining", "Color": "green"},
-#         {"Label": "Trash Collected", "Color": "blue"}
-#     ]
-# )
 
 server = ModularServer(TrafficModel, [grid], "Random Agents", model_params)
                        
