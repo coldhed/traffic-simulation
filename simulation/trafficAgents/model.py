@@ -39,7 +39,8 @@ class TrafficModel(Model):
         self.spawnAmount = spawnAmount
         self.timeSinceLastSpawn = 0
         
-        self.finishedCars = []
+        self.finishedCars = [] # used by Unity to know which cars to remove, so it's reset every step
+        self.totalFinishedCars = [] # used by the server to know how many cars have finished
         
         self.timeToSendData = 100
         self.stepsSinceLastData = 0
@@ -159,6 +160,7 @@ class TrafficModel(Model):
             self.finishedCars = []
             self.schedule.step()
             print("cars on the road: ", len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]))
+            print("total finished cars: ", len(self.totalFinishedCars))
     
     def spawnCars(self):
         spawnPointsCopy = self.spawnPoints.copy()
@@ -183,8 +185,10 @@ class TrafficModel(Model):
             "year": 2023,
             "classroom": 302,
             "name": "Mariel y Sant",
-            "num_cars": len([agent for agent in self.schedule.agents if isinstance(agent, CarAgent)]),
+            "num_cars": len(self.totalFinishedCars),
         }
+        
+        print("Sending data: ", data)
         
         headers = {
             "Content-Type": "application/json"

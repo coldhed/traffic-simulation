@@ -40,6 +40,7 @@ class CarAgent(Agent):
             self.model.schedule.remove(self)
             self.model.grid.remove_agent(self)
             self.model.finishedCars.append(self.unique_id)
+            self.model.totalFinishedCars.append(self.unique_id)
             return
         
         # if we are in a node

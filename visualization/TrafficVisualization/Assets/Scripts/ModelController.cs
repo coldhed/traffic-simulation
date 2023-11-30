@@ -129,6 +129,7 @@ public class ModelController : MonoBehaviour
     public GameObject[] carPrefabs;
     [SerializeField] GameObject semaphorePrefab;
     public int timeToSpawn, spawnAmount;
+    public bool sendsData;
     public float timeToUpdate = 5.0f;
     public float tileSize = 10f;
     private float timer, dt;
@@ -155,7 +156,7 @@ public class ModelController : MonoBehaviour
             timer = timeToUpdate;
             StartCoroutine(UpdateSimulation());
         }
-        
+
     }
 
     IEnumerator UpdateSimulation()
@@ -184,6 +185,7 @@ public class ModelController : MonoBehaviour
 
         form.AddField("timeToSpawn", timeToSpawn.ToString());
         form.AddField("spawnAmount", spawnAmount.ToString());
+        form.AddField("sendsData", sendsData.ToString());
 
         UnityWebRequest www = UnityWebRequest.Post(serverUrl + sendConfigEndpoint, form);
         www.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -296,7 +298,7 @@ public class ModelController : MonoBehaviour
                 {
                     mycolor = Color.red;
                 }
-                else 
+                else
                 {
                     mycolor = Color.green;
                 }
@@ -313,9 +315,10 @@ public class ModelController : MonoBehaviour
 
                     if (mydir == "horizontal")
                     {
-                        pos = new Vector3(agent.x * tileSize + tileSize/2, agent.y, agent.z * tileSize - tileSize);
-                        semaphore = Instantiate(semaphorePrefab, pos, Quaternion.Euler(0, 90, 0));                    }
-                    else 
+                        pos = new Vector3(agent.x * tileSize + tileSize / 2, agent.y, agent.z * tileSize - tileSize);
+                        semaphore = Instantiate(semaphorePrefab, pos, Quaternion.Euler(0, 90, 0));
+                    }
+                    else
                     {
                         semaphore = Instantiate(semaphorePrefab, pos, Quaternion.identity);
                     }

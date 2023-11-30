@@ -521,9 +521,10 @@ MonoBehaviour:
   - {fileID: 8375900289665777467, guid: 2a22a19f6308f4232aa519bb42398b35, type: 3}
   - {fileID: 136492123245518073, guid: be9af27844c3a4064acbd6c22966011a, type: 3}
   semaphorePrefab: {fileID: 2212522875710920287, guid: 9ae497b664de8402987cc96c69f6571f, type: 3}
-  timeToSpawn: 1
-  spawnAmount: 2
-  timeToUpdate: 0.5
+  timeToSpawn: 3
+  spawnAmount: 4
+  sendsData: 1
+  timeToUpdate: 0.4
   tileSize: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
